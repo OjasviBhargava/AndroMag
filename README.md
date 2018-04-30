@@ -47,3 +47,37 @@ Each of *The Big Three* container classes has its approach for dealing with this
 which columns should be forcibly “shrunk” to yield space for other columns if we lack sufficient horizontal room
 
 • Use appropriate rules on *RelativeLayout* to anchor widgets as needed to other widgets or the boundaries of the container, such that extra room flows naturally wherever the rules call for
+
+
+## 5. *Considering Newer Densities*
+
+tvdpi — around 213dpi — was added for Android TV, and is the density used for 720p Android TV devices. However, Google also elected to use -tvdpi for the Nexus7 tablet.
+However, not even Google bothered to create many -tvdpi-specific resources, allowing the OS to downsample from the -hdpi edition. -xxhdpi was added in late 2012 and is for devices with a screen density around 480dpi.
+While Android can up-sample an -xhdpi image for -xxhdpi, the results may
+not be as crisp as you would like. Hence, you may wish to consider creating -xxhdpi as your *top tier* density, so other devices can downsample if needed.
+About 15% of Play Store-equipped Android devices are -xxhdpi.-xxxhdpi is for devices with screens around 640dpi. Also, -xxxhdpi is not in significant use
+
+
+## 6. *The SlidingPaneLayout* :yum:
+
+The R13 update to the *Android Support package* introduced SlidingPaneLayout, a way of handling this sort of master-detail pattern. SlidingPaneLayout significantly reduces the level of effort for setting up master-detail, as it handles all
+of the “dirty work” of showing the different fragments in different scenarios (normal screen, large screen, etc.)
+
+SlidingPaneLayout will detect the screen size. If the screen size is big enough, SlidingPaneLayout will display its two *children side-by-side*. If the screen size is not big enough, *SlidingPaneLayout* will display one child at a time. However, by default, when the “master” child is visible, a thin strip on the right will allow the user to return to the “detail” child.
+
+`These are in addition to any changes in context you might introduce based on UI operations (e.g., tapping on an element in a master ListView automatically switching to the detail child).`
+
+
+## 7. *Drawables by Density*
+
+Icons and related artwork are not necessarily going to be stretched at runtime, but they are still dependent upon screen density.
+
+A 80x80 pixel image may look great on a Samsung Galaxy Nexus or other -xhdpi device, coming in at around a quarter-inch
+on a side. However, when viewed on a -mdpi device, that same icon will be a half inch on a side, which may be entirely too large.
+The best way is to create multiple renditions of the icon at different densities, putting each icon in the appropriate drawable resource directory (e.g., res/drawable-mdpi, res/drawable-hdpi).
+
+This is what Android Asset Studio does, creating launcher icons from some supplied artwork for all four densities. Even better is to create icons tailored for each density — rather than just reducing the pixel count, take steps to draw an icon that will still make sense to the user at the lower pixel count.
+
+
+
+
